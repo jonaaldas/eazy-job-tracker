@@ -4,12 +4,18 @@
     "build": "NITRO_PRESET=cloudflare_module nitro build",
     "dev": "nitro dev",
     "prepare": "nitro prepare",
-    "preview": "node .output/server/index.mjs"
+    "preview": "node .output/server/index.mjs",
+    "preview:cloudflare": "npx wrangler dev",
+    "deploy:cloudflare": "pnpm dlx wrangler deploy"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250506.0",
+    "drizzle-kit": "^0.31.1",
     "nitropack": "latest"
   },
   "dependencies": {
+    "drizzle-orm": "^0.43.1",
+    "nitro-cloudflare-dev": "^0.2.2",
     "wrangler": "^4.14.1"
   }
 }

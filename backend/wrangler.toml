@@ -2,4 +2,9 @@ name = "nitro-app"
 compatibility_date = "2024-09-19"
 main = "./.output/server/index.mjs"
 assets = { directory = "./.output/public/", binding = "ASSETS" }
+[[d1_databases]]
+binding = "DB"
+database_name = "job-tracker"
+database_id = "d5eb111c-9263-40ba-8e14-41b3842d4196"
+migrations_dir = "drizzle/migrations"
 
