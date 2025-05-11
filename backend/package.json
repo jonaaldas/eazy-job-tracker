@@ -2,11 +2,15 @@
   "private": true,
   "scripts": {
     "build": "NITRO_PRESET=cloudflare_module nitro build",
+    "build:dev": "nitro dev",
     "dev": "nitro dev",
     "prepare": "nitro prepare",
     "preview": "node .output/server/index.mjs",
     "preview:cloudflare": "npx wrangler dev",
-    "deploy:cloudflare": "pnpm dlx wrangler deploy"
+    "deploy:cloudflare": "pnpm dlx wrangler deploy",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250506.0",
@@ -14,7 +18,9 @@
     "nitropack": "latest"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "drizzle-orm": "^0.43.1",
+    "drizzle-zod": "^0.7.1",
     "nitro-cloudflare-dev": "^0.2.2",
     "wrangler": "^4.14.1"
   }

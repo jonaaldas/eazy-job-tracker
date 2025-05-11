@@ -3,9 +3,9 @@ import dotenv from 'dotenv'
 import path from 'path'
 
 dotenv.config({ path: path.resolve(process.cwd(), '../.env') })
-
+console.log(process.env)
 export const backendEnv = z.object({
-  DATABASE_URL: z.string(),
+  DATABASE_URL: z.string().optional(),
 })
 
 const env = {

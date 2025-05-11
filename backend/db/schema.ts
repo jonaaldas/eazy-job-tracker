@@ -1,6 +1,7 @@
 // schema.ts
 import { sqliteTable, text, integer, primaryKey } from 'drizzle-orm/sqlite-core'
 import { sql } from 'drizzle-orm'
+import { createSelectSchema } from 'drizzle-zod'
 
 // Users table
 export const users = sqliteTable('users', {
@@ -36,11 +37,15 @@ export const reminders = sqliteTable('reminders', {
   userId: integer('user_id')
     .notNull()
     .references(() => users.id),
-  applicationId: integer('application_id')
-    .notNull()
-    .references(() => jobApplications.id),
+  applicationId: integer('application_id').notNull(),
   date: text('date').notNull(),
   description: text('description').notNull(),
   completed: integer('completed', { mode: 'boolean' }).default(false),
   createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
 })
+
+const userSchema = createSelectSchema(users)
+const jobApplicationSchema = createSelectSchema(jobApplications)
+const reminderSchema = createSelectSchema(reminders)
+
+export { userSchema, jobApplicationSchema, reminderSchema }
