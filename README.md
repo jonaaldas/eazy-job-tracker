@@ -13,6 +13,7 @@ For the server, I implemented Nitro framework because of:
 - Straightforward deployment process
 - The frontend is built with React and TypeScript.
 - I utilized the HTML5 Drag and Drop API to create a smooth user experience for the drag-and-drop functionality.
+- The frontend builds with Vite to the `dist` folder in the backend project.
 
 ## Tech Stack
 

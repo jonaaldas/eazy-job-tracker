@@ -117,7 +117,6 @@ const KanbanBoard: React.FC = () => {
             notes: variables.notes,
           },
         })
-        console.log('Update response:', res)
         return res
       } catch (error) {
         console.error('Update error details:', error)
