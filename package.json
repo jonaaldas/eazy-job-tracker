@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && npm run build:dev"
+    "dev:backend": "cd backend && npm run build:dev",
+    "build:all": "cd backend && npm run build && cd ../frontend && npm run build",
+    "cloudflare:deploy": "cd backend && npm run deploy:cloudflare"
   },
   "keywords": [],
   "author": "",

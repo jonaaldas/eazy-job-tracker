@@ -7,14 +7,11 @@ import { PlusCircle } from 'lucide-react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { ofetch } from 'ofetch'
 import Header from './Header'
-import { useDebounce } from '@uidotdev/usehooks'
 
 const KanbanBoard: React.FC = () => {
   const [isFormVisible, setIsFormVisible] = useState(false)
   const [editingJob, setEditingJob] = useState<Job | null>(null)
   const [editingColumn, setEditingColumn] = useState<ColumnType | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
-  const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
   const getAllJobs = async () => {
     const res = await fetch('/api/jobs/all')
@@ -24,6 +21,7 @@ const KanbanBoard: React.FC = () => {
   const getAllJobsQuery = useQuery({
     queryKey: ['all_jobs_user_1'],
     queryFn: getAllJobs,
+    refetchOnWindowFocus: false,
   })
 
   const moveJobToNewColumn = useMutation({
@@ -86,19 +84,6 @@ const KanbanBoard: React.FC = () => {
     },
   })
 
-  const searchResultsQuery = useQuery({
-    queryKey: ['search', debouncedSearchTerm],
-    queryFn: () => fetchSearchResults(debouncedSearchTerm),
-  })
-
-  const fetchSearchResults = async (term: string) => {
-    const response = await ofetch(`/api/jobs/search?searchTerm=${encodeURIComponent(term)}`)
-    if (!response.success) {
-      throw new Error('Search failed')
-    }
-    return response
-  }
-
   const handleMoveJob = (jobId: string, source: ColumnType, destination: ColumnType) => {
     if (source === destination) return
 
@@ -116,27 +101,51 @@ const KanbanBoard: React.FC = () => {
 
   const updateJobMutation = useMutation({
     mutationFn: async (variables: Job & { id: string }) => {
-      const res = await ofetch(`/api/jobs/update/${variables.id}`, {
-        method: 'PUT',
-        body: variables,
-      })
-
-      if (res.success) {
+      try {
+        const res = await ofetch(`/api/jobs/update/${variables.id}`, {
+          method: 'PUT',
+          body: {
+            jobId: Number(variables.id),
+            companyName: variables.companyName,
+            positionTitle: variables.positionTitle,
+            status: variables.status,
+            applicationDate: variables.applicationDate,
+            location: variables.location,
+            salaryRange: variables.salaryRange,
+            contactPerson: variables.contactPerson,
+            contactEmail: variables.contactEmail,
+            notes: variables.notes,
+          },
+        })
+        console.log('Update response:', res)
         return res
+      } catch (error) {
+        console.error('Update error details:', error)
+        throw error
       }
-      throw new Error('Failed to update job')
     },
-    onSuccess: () => {
-      getAllJobsQuery.refetch()
+    onSuccess: async () => {
+      await getAllJobsQuery.refetch()
       setEditingJob(null)
+    },
+    onError: error => {
+      console.error('Mutation error:', error)
     },
   })
 
-  const handleEditJob = (job: Job) => {
-    updateJobMutation.mutate({
-      ...job,
-      id: job.id.toString(),
-    })
+  const handleEditButtonClick = (job: Job) => {
+    setEditingJob(job)
+  }
+
+  const handleEditJob = async (job: Job) => {
+    try {
+      await updateJobMutation.mutateAsync({
+        ...job,
+        id: job.id.toString(),
+      })
+    } catch (error) {
+      console.error('Failed to update job:', error)
+    }
   }
 
   const handleDeleteJob = (jobId: string) => {
@@ -147,10 +156,7 @@ const KanbanBoard: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
-      <Header
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-      />
+      <Header />
 
       <main className="flex-1 overflow-hidden p-4 flex flex-col">
         <div className="max-w-full mx-auto">
@@ -171,28 +177,14 @@ const KanbanBoard: React.FC = () => {
 
           <div className="flex space-x-4 overflow-x-auto pb-4 h-[calc(100vh-160px)]">
             {(() => {
-              if (debouncedSearchTerm && searchResultsQuery.data?.success) {
-                return Object.values(searchResultsQuery.data.columns || {}).map((column: any) => (
-                  <Column
-                    key={column.id}
-                    column={column}
-                    onMoveJob={handleMoveJob}
-                    onEditJob={handleEditJob}
-                    onDeleteJob={handleDeleteJob}
-                    searchTerm={debouncedSearchTerm}
-                  />
-                ))
-              }
-
               if (getAllJobsQuery.data?.columns) {
                 return Object.values(getAllJobsQuery.data.columns).map((column: any) => (
                   <Column
                     key={column.id}
                     column={column}
                     onMoveJob={handleMoveJob}
-                    onEditJob={handleEditJob}
+                    onEditJob={handleEditButtonClick}
                     onDeleteJob={handleDeleteJob}
-                    searchTerm={debouncedSearchTerm}
                   />
                 ))
               }
@@ -216,9 +208,7 @@ const KanbanBoard: React.FC = () => {
         <EditJobModal
           job={editingJob}
           onClose={() => setEditingJob(null)}
-          onUpdate={updatedJob => {
-            handleEditJob(updatedJob)
-          }}
+          onUpdate={handleEditJob}
         />
       )}
     </div>

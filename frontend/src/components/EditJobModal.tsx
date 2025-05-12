@@ -55,7 +55,6 @@ const EditJobModal: React.FC<EditJobModalProps> = ({ job, onClose, onUpdate }) =
             <X className="w-6 h-6" />
           </button>
         </div>
-        {<pre>{JSON.stringify(job, null, 2)}</pre>}
 
         <form
           onSubmit={handleSubmit}

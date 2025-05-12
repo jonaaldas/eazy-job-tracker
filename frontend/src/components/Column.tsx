@@ -7,23 +7,9 @@ interface ColumnProps {
   onMoveJob: (jobId: string, source: ColumnTypeEnum, destination: ColumnTypeEnum) => void
   onEditJob: (job: Job) => void
   onDeleteJob: (jobId: string, columnId: ColumnTypeEnum) => void
-  searchTerm: string
 }
 
-const Column: React.FC<ColumnProps> = ({ column, onMoveJob, onEditJob, onDeleteJob, searchTerm }) => {
-  const filteredJobs = column.jobs.filter(
-    job =>
-      job.positionTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.companyName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.applicationDate?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.salaryRange?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.contactPerson?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.contactEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.notes?.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-
+const Column: React.FC<ColumnProps> = ({ column, onMoveJob, onEditJob, onDeleteJob }) => {
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
   }
@@ -45,13 +31,13 @@ const Column: React.FC<ColumnProps> = ({ column, onMoveJob, onEditJob, onDeleteJ
         className="p-3 text-white rounded-t-md flex items-center"
         style={{ backgroundColor: column.color }}>
         <h2 className="font-medium">{column.title}</h2>
-        <div className="ml-2 px-2 py-0.5 bg-white text-black bg-opacity-30 rounded-full text-xs">{filteredJobs.length}</div>
+        <div className="ml-2 px-2 py-0.5 bg-white text-black bg-opacity-30 rounded-full text-xs">{column.jobs.length}</div>
       </div>
 
       <div className="p-2 text-xs text-gray-500">{column.description}</div>
 
       <div className="flex-1 p-2 overflow-y-auto">
-        {filteredJobs.map(job => (
+        {column.jobs.map(job => (
           <JobCard
             key={job.id}
             job={job}
@@ -63,9 +49,9 @@ const Column: React.FC<ColumnProps> = ({ column, onMoveJob, onEditJob, onDeleteJ
           />
         ))}
 
-        {filteredJobs.length === 0 && (
+        {column.jobs.length === 0 && (
           <div className="flex items-center justify-center h-24 border-2 border-dashed border-gray-200 rounded-md">
-            <p className="text-gray-400 text-sm">{searchTerm ? 'No matching jobs found' : 'No jobs in this column'}</p>
+            <p className="text-gray-400 text-sm">No jobs in this column</p>
           </div>
         )}
       </div>

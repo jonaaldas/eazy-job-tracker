@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import type { Job, ColumnType } from '../types'
 import { formatDate } from '../utils'
-import { ExternalLink, ChevronDown, ChevronUp, Edit, Trash } from 'lucide-react'
+import { ChevronDown, ChevronUp, Edit, Trash } from 'lucide-react'
 
 interface JobCardProps {
   job: Job
@@ -44,16 +44,6 @@ const JobCard: React.FC<JobCardProps> = ({ job, columnId, onMoveJob, onEditJob, 
             <p className="text-sm text-gray-600">{job.companyName}</p>
           </div>
           <div className="flex items-center">
-            {job.contactEmail && (
-              <a
-                href={`mailto:${job.contactEmail}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-gray-600 mr-2 transition-colors duration-200"
-                onClick={e => e.stopPropagation()}>
-                <ExternalLink size={16} />
-              </a>
-            )}
             <button
               onClick={() => setExpanded(!expanded)}
               className="text-gray-400 hover:text-gray-600 transition-colors duration-200">
