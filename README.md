@@ -22,7 +22,6 @@ For the server, I implemented Nitro framework because of:
 - Styling: Tailwind CSS
 - Deployment: Cloudflare Workers
 - Database: Cloudflare D1
-- Version Control: Git/GitHub
 
 ## Features
 
