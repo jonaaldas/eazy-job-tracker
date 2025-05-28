@@ -33,7 +33,7 @@ For the server, I implemented Nitro framework because of:
 
 ## Live Demo
 
-The application is available at: [Job Tracker Kanban Flow](https://nitro-app.jonaaldas.workers.dev/https://nitro-app.jonaaldas.workers.dev/)
+The application is available at: [Job Tracker Kanban Flow](https://nitro-app.jonaaldas.workers.dev/)
 
 ![CleanShot 2025-05-12 at 10 54 23@2x](https://github.com/user-attachments/assets/0200ebb4-ac36-41d8-bcb7-a78e43033753)
 ![CleanShot 2025-05-12 at 10 54 42@2x](https://github.com/user-attachments/assets/25eca200-5743-430f-b296-128b9d7a0e72)
